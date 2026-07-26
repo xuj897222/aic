@@ -44,7 +44,8 @@ class ColonPairedDataset(Dataset):
 
         self.files = sorted([
             f.name for f in source_dir.iterdir()
-            if f.suffix.lower() in (".jpg", ".jpeg", ".png")
+            if f.suffix.lower() in (".jpg", ".jpeg")
+            and "_pred" not in f.stem and "cd68_" not in f.stem
         ])
 
         # Verify pairing

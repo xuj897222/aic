@@ -160,10 +160,11 @@ class UNet(nn.Module):
             ),
         })
         if self.use_attention:
-            dec["attn4"] = AttentionGate(chs[3], chs[3])
-            dec["attn3"] = AttentionGate(chs[2], chs[2])
-            dec["attn2"] = AttentionGate(chs[1], chs[1])
-            dec["attn1"] = AttentionGate(chs[0], chs[0])
+            # g_ch = prev decoder output channels, x_ch = skip channels
+            dec["attn4"] = AttentionGate(chs[4], chs[3])   # g:512, x:512
+            dec["attn3"] = AttentionGate(chs[3], chs[2])   # g:512, x:256
+            dec["attn2"] = AttentionGate(chs[2], chs[1])   # g:256, x:128
+            dec["attn1"] = AttentionGate(chs[1], chs[0])   # g:128, x:64
         return dec
 
     def _encode(self, x):

@@ -132,6 +132,18 @@ class EdgeLoss(nn.Module):
 
 
 # ============================================================
+# TV Loss (Total Variation — 抑制噪声/伪影)
+# ============================================================
+
+class TVLoss(nn.Module):
+    """Total variation loss: penalize pixel-to-pixel variation."""
+
+    def forward(self, x):
+        return (x[:, :, 1:, :] - x[:, :, :-1, :]).abs().mean() + \
+               (x[:, :, :, 1:] - x[:, :, :, :-1]).abs().mean()
+
+
+# ============================================================
 # Combined Loss
 # ============================================================
 
@@ -161,12 +173,17 @@ class CombinedLoss(nn.Module):
             self.losses["perceptual"] = PerceptualLoss()
         if "edge" in weights:
             self.losses["edge"] = EdgeLoss()
+        if "tv" in weights:
+            self.losses["tv"] = TVLoss()
 
     def forward(self, pred, target):
         total = 0.0
         details = {}
         for name, loss_fn in self.losses.items():
-            val = loss_fn(pred, target)
+            if name == "tv":
+                val = loss_fn(pred)  # TV loss only needs prediction
+            else:
+                val = loss_fn(pred, target)
             w = self.weights[name]
             total += w * val
             details[name] = val.item()
