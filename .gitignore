@@ -1,0 +1,24 @@
+# Models (large files)
+model/
+
+# Datasets
+dataset/
+
+# Outputs / checkpoints / predictions
+outputs/
+
+# PixCell repo (separate repository)
+PixCell/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
